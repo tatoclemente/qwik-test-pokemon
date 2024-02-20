@@ -1,4 +1,4 @@
-import { component$, useSignal, useTask$ } from "@builder.io/qwik";
+import { component$, useComputed$, useSignal, useTask$ } from "@builder.io/qwik";
 
 
 
@@ -16,15 +16,17 @@ export const PokemonImage = component$(( { id, size = 200, backImage = false, is
   useTask$(({ track }) => {
     track(() => id);
     imageLoader.value = false;
-    console.log('imageLoader', imageLoader.value);
     return;
   })
 
-  const baseUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
+  const imageUrl = useComputed$(() => {
+    const baseUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
+    return backImage 
+    ? `${ baseUrl }back/${ id }.png`
+    : `${ baseUrl }${ id }.png`
+  })
 
-  const imageUrl = backImage 
-          ? `${ baseUrl }back/${ id }.png`
-          : `${ baseUrl }${ id }.png`
+
 
   return (
     <div 
@@ -37,15 +39,15 @@ export const PokemonImage = component$(( { id, size = 200, backImage = false, is
         )
       }
       <img 
-          width={96} 
-          height={96} 
-          src={ imageUrl } 
+          width={100} 
+          height={100} 
+          src={ imageUrl.value } 
           alt="img-pokemon" 
           style={{ width: `${ size }px` }}
           onLoad$={ () => imageLoader.value = true }
           class={{
             'hidden': !imageLoader.value,
-            'brightness-0': !isVisible
+            'brightness-0': isVisible
           }}
         />
     </div>

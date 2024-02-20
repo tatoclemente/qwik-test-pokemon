@@ -67,6 +67,6 @@ body {
   @apply bg-purple-700
 }
 
-button:disabled {
+button:disabled, button:disabled:hover {
   @apply bg-gray-400
 }

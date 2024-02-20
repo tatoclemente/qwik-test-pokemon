@@ -1,31 +1,34 @@
-import { $, component$, useSignal } from "@builder.io/qwik";
+import { $, component$, useContext } from "@builder.io/qwik";
 import { useNavigate, type DocumentHead } from "@builder.io/qwik-city";
 import { PokemonImage } from "~/components/pokemons/pokemon-image";
+import { PokemonGameContext } from "~/context";
 
 
 export default component$(() => {
 
   const nav = useNavigate()
 
-  const pokemonId = useSignal(1) // datos primitivos, booleans, string
-  const showBackImage = useSignal(false)
-  const hideImage = useSignal(true)
+  // const pokemonId = useSignal(1) // datos primitivos, booleans, string
+  // const showBackImage = useSignal(false)
+  // const hideImage = useSignal(true)
+
+  const pokemonGame = useContext( PokemonGameContext )
 
 
   const changePokemonId = $(( value: number ) => {
-      if (  ( pokemonId.value + value ) > 0 && ( pokemonId.value + value ) < 807 ) {
-        hideImage.value = true
-        pokemonId.value += value
+      if (  ( pokemonGame.pokemonId + value ) > 0 && ( pokemonGame.pokemonId+ value ) < 807 ) {
+        pokemonGame.hideImage = true
+        pokemonGame.pokemonId += value
       }
   })
 
   const toggleBackImage = $(() => {
-    showBackImage.value = !showBackImage.value
+    pokemonGame.showBackImage = !pokemonGame.showBackImage
   })
 
 
   const goToPokemon = $(() => {
-    nav(`/pokemon/${ pokemonId.value }`)
+    nav(`/pokemon/${ pokemonGame.pokemonId }`)
   })
 
   return (
@@ -33,22 +36,22 @@ export default component$(() => {
       
       <span class='text-2xl'>Buscador simple</span>
 
-      <span class='text-9xl'>{ pokemonId }</span>
+      <span class='text-9xl'>{ pokemonGame.pokemonId }</span>
 
       <div class='cursor-pointer' onClick$={ goToPokemon }>
         <PokemonImage 
-          id={pokemonId.value} 
+          id={pokemonGame.pokemonId} 
           size={ 150 } 
-          backImage={ showBackImage.value } 
-          isVisible={ hideImage.value } 
+          backImage={ pokemonGame.showBackImage } 
+          isVisible={ pokemonGame.hideImage } 
         />
       </div>
       
       <div class='mt-2'>
-        <button disabled={ pokemonId.value === 1 }  onClick$={ () => changePokemonId(-1) } class='btn btn-primary mr-2'>Anterior</button>
+        <button disabled={ pokemonGame.pokemonId === 1 }  onClick$={ () => changePokemonId(-1) } class='btn btn-primary mr-2'>Anterior</button>
         <button onClick$={ () => changePokemonId(+1) } class='btn btn-primary mr-2'>Siguiente</button>
         <button onClick$={ toggleBackImage } class='btn btn-primary mr-2'>Voltear</button>
-        <button onClick$={ () => hideImage.value = !hideImage.value } class='btn btn-primary mr-2'>Revelar</button>
+        <button onClick$={ () => pokemonGame.hideImage = !pokemonGame.hideImage } class='btn btn-primary mr-2'>Revelar</button>
       </div>
 
     </>
