@@ -28,8 +28,8 @@ export const PokemonProvider = component$(() => {
 
       const pokemonLocalStorage = JSON.parse(localStorage.getItem("pokemon-game") as string)
       pokemonGame.showBackImage = pokemonLocalStorage.showBackImage
-      pokemonGame.hideImage    = pokemonLocalStorage.hideImage
-      pokemonGame.pokemonId    = pokemonLocalStorage.pokemonId
+      pokemonGame.hideImage     = pokemonLocalStorage.hideImage
+      pokemonGame.pokemonId     = pokemonLocalStorage.pokemonId
     }
     
   })
